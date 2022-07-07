@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <div class="title">Case Converter</div>
+    <label>
+        <textarea></textarea>
+    </label>
+    <button id="upper-case">Upper Case</button>
+    <button id="lower-case">Lower Case</button>
+    <button id="proper-case">Proper Case</button>
+    <button id="sentence-case">Sentence Case</button>
+    <button id="save-text-file">Save Text File</button>
+</body>
+</html>
+
+<script>
+    let upperCaseButton = document.getElementById("upper-case");
+    let lowerCaseButton = document.getElementById("lower-case");
+    let properCaseButton = document.getElementById("proper-case");
+    let sentenceCaseButton = document.getElementById("sentence-case");
+    let textarea = document.querySelector("textarea");
+
+    upperCaseButton.addEventListener("click", toUpperCase);
+    lowerCaseButton.addEventListener("click", toLowerCase)
+    properCaseButton.addEventListener("click", toProperCaseConverter);
+    sentenceCaseButton.addEventListener("click", toSentenceCaseConverter);
+
+    function toUpperCase() {
+        textarea.value = readTextarea().toString().toUpperCase();
+        textarea.style.textTransform = "uppercase";
+    }
+
+    function toLowerCase() {
+        textarea.value = readTextarea().toString().toLowerCase();
+        textarea.style.textTransform = "lowercase";
+    }
+
+    function toProperCaseConverter() {
+        textarea.style.textTransform = "none";
+        textarea.value = toProperCase(readTextarea());
+    }
+
+    function toSentenceCaseConverter() {
+        textarea.style.textTransform = "none";
+        textarea.value = toSentenceCase(readTextarea());
+    }
+
+    function toProperCase(sentences) {
+        return sentences.replace(/\w\S*/g, function (txt) {
+            return txt.charAt(0).toUpperCase() + txt.slice(1).toLowerCase();
+        });
+    }
+
+    function toSentenceCase(sentences) {
+        return sentences.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, function (c) {
+            return c.toUpperCase()
+        });
+    }
+
+    function readTextarea() {
+        return textarea.value.toLowerCase();
+    }
+
+</script>
+<script>
+    let getTextButton = document.getElementById("save-text-file");
+
+    getTextButton.addEventListener("click", download);
+    
+
+    function download(filename, text) {
+        let element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
+
+        // Start file download.
+        download("text.txt", document.querySelector('textarea').value);
+    };
+</script>
